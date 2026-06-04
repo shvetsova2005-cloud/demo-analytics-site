@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ТехноПрайс — Демо сайт</title>
+
+  <!-- ========================================================
+       КРОК A: GA4 напряму (замінити G-XXXXXXXXXX на свій ID)
+       Закоментуй цей блок, якщо підключаєш GA4 через GTM
+  ======================================================== -->
+  <!--
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+  -->
+
+  <!-- ========================================================
+       КРОК B: Google Tag Manager (замінити GTM-XXXXXXX на свій)
+       Розкоментуй після отримання GTM-контейнера
+  ======================================================== -->
+  <!--
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
+  -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #13131a;
+      --accent: #00e5ff;
+      --accent2: #ff6b35;
+      --text: #e8e8f0;
+      --muted: #6b6b80;
+      --border: rgba(255,255,255,0.08);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* NOISE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2.5rem;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+    }
+    .logo span { color: var(--accent2); }
+    nav ul { list-style: none; display: flex; gap: 2rem; }
+    nav a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--text); }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      min-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4rem 2rem;
+      overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(0,229,255,0.12) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .hero-glow2 {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(255,107,53,0.08) 0%, transparent 70%);
+      top: 30%;
+      right: 10%;
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      border: 1px solid rgba(0,229,255,0.3);
+      border-radius: 100px;
+      font-size: 0.75rem;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      animation: fadeUp 0.6s ease both;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+    h1 {
+      font-family: 'Unbounded', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+    h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 2rem;
+      border-radius: 8px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.1);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .btn:hover::after { opacity: 1; }
+
+    /* ===== КНОПКА ДЛЯ КАСТОМНОЇ ПОДІЇ ===== */
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #00b4cc);
+      color: #000;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(0,229,255,0.3);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      border-color: rgba(255,255,255,0.25);
+      transform: translateY(-2px);
+    }
+
+    /* ПРОДУКТИ */
+    section { padding: 5rem 2rem; position: relative; }
+    .section-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    h2 {
+      font-family: 'Unbounded', sans-serif;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 3rem;
+    }
+    .products-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .product-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .product-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .product-card:hover {
+      border-color: rgba(0,229,255,0.2);
+      transform: translateY(-4px);
+    }
+    .product-card:hover::before { opacity: 1; }
+    .product-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    .product-name {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .product-desc {
+      color: var(--muted);
+      font-size: 0.875rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    .product-price {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--accent);
+    }
+    .product-price span {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-family: 'Manrope', sans-serif;
+      font-weight: 400;
+    }
+
+    /* ФОРМА */
+    .form-section {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .form-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+    input[type="email"] {
+      flex: 1;
+      min-width: 220px;
+      padding: 0.85rem 1.2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type="email"]:focus { border-color: var(--accent); }
+    input[type="email"]::placeholder { color: var(--muted); }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--surface);
+      border: 1px solid rgba(0,229,255,0.4);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.875rem;
+      z-index: 999;
+      transform: translateY(120%);
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+      max-width: 340px;
+    }
+    .toast.show { transform: translateY(0); }
+    .toast-icon { font-size: 1.2rem; }
+    .toast strong { display: block; margin-bottom: 0.2rem; }
+    .toast p { color: var(--muted); font-size: 0.8rem; }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      nav ul { display: none; }
+      .form-group { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- GTM noscript (замінити GTM-XXXXXXX) -->
+  <!--
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  -->
+
+  <nav>
+    <div class="logo">Техно<span>Прайс</span></div>
+    <ul>
+      <li><a href="#products">Продукти</a></li>
+      <li><a href="#contact">Контакт</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-glow2"></div>
+    <div class="hero-badge">Новинки 2025</div>
+    <h1>Техніка<br/>нового <em>рівня</em></h1>
+    <p>Найкращі пропозиції на електроніку. Прайс-лист оновлюється щодня — завантажуй і обирай.</p>
+    <div class="hero-actions">
+      <!-- ===== КАСТОМНА ПОДІЯ: download_price ===== -->
+      <button class="btn btn-primary" id="btn-download" onclick="trackDownload()">
+        ⬇ Завантажити прайс
+      </button>
+      <a href="#products" class="btn btn-secondary">Переглянути каталог</a>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section id="products">
+    <div style="max-width:1100px; margin:0 auto;">
+      <p class="section-label">Каталог</p>
+      <h2>Популярні товари</h2>
+      <div class="products-grid">
+        <div class="product-card">
+          <div class="product-icon">💻</div>
+          <div class="product-name">Ноутбук ProMax X15</div>
+          <div class="product-desc">Intel Core i7, 16GB RAM, 512GB SSD, 15.6" IPS дисплей. Ідеально для роботи та навчання.</div>
+          <div class="product-price">28 999 <span>грн</span></div>
+        </div>
+        <div class="product-card">
+          <div class="product-icon">📱</div>
+          <div class="product-name">Смартфон Nexus Z</div>
+          <div class="product-desc">6.7" AMOLED, 108MP камера, 5000 mAh, 5G. Флагман за розумною ціною.</div>
+          <div class="product-price">14 499 <span>грн</span></div>
+        </div>
+        <div class="product-card">
+          <div class="product-icon">🎧</div>
+          <div class="product-name">Навушники SoundPro</div>
+          <div class="product-desc">Активне шумоподавлення ANC, 30 год автономності, бездротові Bluetooth 5.3.</div>
+          <div class="product-price">4 299 <span>грн</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT / ФОРМА -->
+  <section id="contact" style="background: var(--surface);">
+    <div class="form-section">
+      <p class="section-label">Залишайтесь в курсі</p>
+      <h2>Отримуй оновлення</h2>
+      <p style="color:var(--muted); line-height:1.7;">Підпишись і отримуй актуальний прайс та спецпропозиції першим.</p>
+      <div class="form-group">
+        <input type="email" id="email-input" placeholder="твій@email.com" />
+        <!-- ===== КАСТОМНА ПОДІЯ: form_submit ===== -->
+        <button class="btn btn-primary" onclick="trackFormSubmit()">Підписатись</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 ТехноПрайс — Демо-сайт для практичного завдання GA4 + GTM</p>
+  </footer>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toast">
+    <div class="toast-icon">✅</div>
+    <div>
+      <strong id="toast-title">Подія зафіксована!</strong>
+      <p id="toast-desc">Перевір GA4 DebugView або GTM Preview</p>
+    </div>
+  </div>
+
+  <script>
+    // ============================================================
+    //  КАСТОМНА ПОДІЯ 1: Завантажити прайс
+    //  GA4 DebugView покаже: download_price
+    //  GTM Preview покаже: спрацювання тегу на цю подію
+    // ============================================================
+    function trackDownload() {
+      // Відправка події в GA4
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'download_price', {
+          event_category: 'engagement',
+          event_label: 'hero_button',
+          value: 1
+        });
+      }
+
+      // Відправка через dataLayer (для GTM)
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'download_price',
+        button_location: 'hero',
+        button_text: 'Завантажити прайс'
+      });
+
+      showToast('📥 download_price', 'Подія відправлена в dataLayer і GA4');
+      console.log('🟢 GA4 Event fired: download_price');
+    }
+
+    // ============================================================
+    //  КАСТОМНА ПОДІЯ 2: Відправка форми
+    //  GA4 DebugView покаже: form_submit
+    // ============================================================
+    function trackFormSubmit() {
+      const email = document.getElementById('email-input').value;
+      if (!email) {
+        showToast('⚠️ Введи email', 'Поле email не може бути порожнім');
+        return;
+      }
+
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'form_submit', {
+          event_category: 'lead',
+          event_label: 'newsletter_signup'
+        });
+      }
+
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'form_submit',
+        form_name: 'newsletter',
+        form_location: 'contact_section'
+      });
+
+      showToast('📧 form_submit', 'Форма відправлена! Перевір DebugView');
+      console.log('🟢 GA4 Event fired: form_submit');
+      document.getElementById('email-input').value = '';
+    }
+
+    // TOAST helper
+    function showToast(title, desc) {
+      document.getElementById('toast-title').textContent = title;
+      document.getElementById('toast-desc').textContent = desc;
+      const t = document.getElementById('toast');
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 4000);
+    }
+  </script>
+</body>
+</html>
